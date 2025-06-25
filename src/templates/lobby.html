@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="it">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Gioco Alcolico - Lobby</title>
+  <script src="https://code.jquery.com/jquery-3.7.1.slim.min.js" integrity="sha256-kmHvs0B+OpCW5GVHUNjv9rOmY0IvSIRcf7zGUDTDQM8=" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/socket.io-client@4.0.0/dist/socket.io.min.js"></script>
+  <script src="https://cdn.tailwindcss.com"></script>
+
+  <style>
+
+    html, body {
+      height: 100%;
+      margin: 0;
+      overflow: hidden;
+    }
+
+    #gameStarted {
+      display: none; 
+    }
+
+    #gameIframe {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100vw; 
+      height: 100vh;
+      border: none;
+    }
+
+    .lobbyCode {
+      position: absolute;
+      top: 0;
+      left: 0;
+      z-index: 5;
+    }
+    
+  </style>
+
+</head>
+
+<body class="bg-gradient-to-br from-pink-500 via-red-500 to-yellow-500 min-h-screen flex items-center justify-center p-4">
+
+  <div id="mainPage" class="bg-white/80 backdrop-blur-md shadow-xl rounded-2xl p-8 max-w-3xl w-full">
+    <h1 class="text-3xl md:text-4xl font-bold text-center mb-8 text-gray-800">🎉 Lobby del Gioco</h1>
+
+    <div class="text-center mb-6">
+      <p class="text-gray-800">Codice della Lobby: <span id="lobbyCodeDisplay">{{ lobbyCode }}</span></p>
+    </div>
+
+    <div id="playersList" class="mb-6">
+      <h2 class="text-2xl font-semibold text-gray-700">Giocatori nella Lobby:</h2>
+      <ul id="playerList" class="mt-4 text-gray-600"></ul>
+    </div>
+    {% if isHost %}
+    <button id="startGameButton" class="bg-green-500 hover:bg-green-600 text-white font-bold py-2 px-6 rounded-full transition-all w-full mt-6">
+      Inizia la partita
+    </button>
+    {% endif %}
+
+  </div>
+
+  <script>
+
+    const socket = io('{{ SOCKET_URL }}');
+    const playerList = $("#playerList");
+    
+    socket.emit("join_lobby");
+
+    socket.on("update_player", (data) => {
+      playerList.empty();
+      data["players"].forEach(playerName => {
+        var playerItem = document.createElement('li');
+        playerItem.textContent = playerName;
+        playerList.append(playerItem);
+      });
+    });
+
+    socket.on("reload", (data) => {
+      location.reload();
+    });
+
+    {% if isHost %}
+    $("#startGameButton").on("click", () => {
+      fetch("/api/game/start")
+        .then(res => res.json())
+        .then(json => {
+          if (!json["ok"]) {
+            alert(json["error"]);
+          }
+          else {
+            fetch("/api/reload");
+          }
+        });
+      });
+    {% endif %}
+  </script>
+</body>
+</html>

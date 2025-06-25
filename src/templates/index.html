@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="it">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Gioco Alcolico - Lobby</title>
+  <script src="https://cdn.jsdelivr.net/npm/socket.io-client@4.0.0/dist/socket.io.min.js"></script>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://code.jquery.com/jquery-3.7.1.slim.min.js" integrity="sha256-kmHvs0B+OpCW5GVHUNjv9rOmY0IvSIRcf7zGUDTDQM8=" crossorigin="anonymous"></script>
+</head>
+
+<body class="bg-gradient-to-br from-pink-500 via-red-500 to-yellow-500 min-h-screen flex items-center justify-center p-4">
+  <div class="bg-white/80 backdrop-blur-md shadow-xl rounded-2xl p-8 max-w-3xl w-full">
+    <h1 class="text-3xl md:text-4xl font-bold text-center mb-8 text-gray-800">🎉 Drinking game</h1>
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+      <div class="bg-white rounded-xl shadow-md p-6 flex flex-col items-center">
+        <h2 class="text-2xl font-semibold mb-4 text-gray-700">Crea una Lobby</h2>
+        <input type="text" id="playerNameCreate" placeholder="Nome giocatore" class="w-full mb-4 px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-pink-500">
+        <button id="createLobbyButton" class="bg-pink-500 hover:bg-pink-600 text-white font-bold py-2 px-6 rounded-full transition-all w-full">
+          Crea Lobby
+        </button>
+        <p id="lobbyCode" class="text-center text-gray-600 mt-4 hidden">Codice Lobby: <span id="code"></span></p>
+      </div>
+      <div class="bg-white rounded-xl shadow-md p-6 flex flex-col items-center">
+        <h2 class="text-2xl font-semibold mb-4 text-gray-700">Entra in una Lobby</h2>
+        <input type="text" id="lobbyCodeInput" placeholder="Codice Lobby" class="w-full mb-4 px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-yellow-500">
+        <input type="text" id="playerNameJoin" placeholder="Nome giocatore" class="w-full mb-4 px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-yellow-500">
+        <button id="joinLobbyButton" class="bg-yellow-500 hover:bg-yellow-600 text-white font-bold py-2 px-6 rounded-full transition-all w-full">
+          Entra
+        </button>
+        <p id="errorMessage" class="text-red-500 text-center mt-4 hidden"></p>
+      </div>
+    </div>
+    <p class="text-center text-gray-600 mt-8">🔥 Divertiti in modo responsabile!</p>
+  </div>
+
+  <script>
+
+    $("#createLobbyButton").on("click", () => {
+        var playerName = $("#playerNameCreate").val();
+        fetch("/api/createLobby")
+            .then(res => res.json())
+            .then(json => {
+                var code = json['code'];
+                fetch(`/api/joinLobby/${code}/${playerName}`)
+                    .then(res => {
+                        document.location = "/game";
+                    });
+            })
+    });
+
+    $("#joinLobbyButton").on("click", () => {
+      var playerName = $("#playerNameJoin").val();
+      var code = $("#lobbyCodeInput").val();
+
+      fetch(`/api/joinLobby/${code}/${playerName}`)
+        .then(res => res.json())
+        .then(json => {
+          if (!json["ok"]) {
+            $("#errorMessage").text(json["error"]);
+            $("#errorMessage").removeClass("hidden");
+          }
+          else { 
+            document.location = "/game";
+          }
+        });
+    }); 
+
+  </script>
+
+</body>
+</html>
