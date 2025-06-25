@@ -35,6 +35,18 @@ def startGame():
 
     return jsonify({"ok": True})
 
+@api.route("/game/next")
+def nextGame():
+    lobby = lm.getLobbyByCode(session["LobbyCode"])
+    playerName = session['playerName']
+
+    if lobby.getHost() != playerName:
+        return {"ok": False, "error": "Non sei l'host!"}
+
+    lobby.genNewSeed()
+
+    return jsonify({"ok": True})
+
 @api.route("/reload")
 def reloadPage():
     lobbyCode = session["LobbyCode"]

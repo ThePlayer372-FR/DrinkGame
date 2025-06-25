@@ -9,7 +9,13 @@
 
     {% if isHost %}
     $("#next").on("click", () => {
-      fetch("/api/reload");
+      fetch("/api/game/next")
+        .then(res => res.json())
+        .then(json => {
+          if (json["ok"]){
+            fetch("/api/reload");
+          }
+        })
     });
     {% endif %}
 </script>
