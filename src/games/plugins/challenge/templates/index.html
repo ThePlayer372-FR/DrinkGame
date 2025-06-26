@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="it">
+
+<head>
+    {% include "headGame.html" %}
+</head>
+    <body class="bg-gradient-to-br from-lime-400 to-cyan-500 min-h-screen flex items-center justify-center p-6">
+    <div class="bg-white/90 backdrop-blur-md shadow-xl rounded-3xl p-8 max-w-2xl w-full space-y-6 text-center">
+    <h1 class="text-4xl font-extrabold text-gray-800">Challenge!</h1>
+    <p class="text-gray-700 text-lg leading-relaxed">
+        {{ players[0] }} sfida {{ players[1] }} in qualcosa a tua scelta.
+        <br><br>
+        ⚠️ Chi perde beve!.
+    </p>
+    {% if isHost %}
+    <button id="next" class="mt-4 bg-purple-600 hover:bg-purple-700 text-white font-bold py-3 px-8 rounded-full transition-all text-lg">
+        🎲 Pesca un altro gioco
+    </button>
+    {% endif %}
+    </div>
+
+    {% include "baseGame.html" %}
+</body>
+</html>

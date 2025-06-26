@@ -22,6 +22,7 @@ class GamesManager:
 
     GAMES: dict[str, Game] = {}
     _dummyLobby: Lobby
+    whitelist = []
 
     def __init__(self):
         lobby = Lobby()
@@ -34,12 +35,17 @@ class GamesManager:
         gameName = game.getName()
 
         if self.GAMES.get(gameName) != None:
-            log(f"Gioco ")
+            log(f"Gioco già caricato!")
             return
+
+        if len(self.whitelist) != 0 and gameName not in self.whitelist:
+            log(f"Gioco {gameName} non in whitelist!")
+            return
+
 
         gameWeight = game.getWeight()
 
-        if not type(gameWeight) == int:
+        if not type(gameWeight) in [int, float]:
             log(f"Peso del gioco {gameName} errato!")
             return
 

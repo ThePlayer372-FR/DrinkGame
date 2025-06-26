@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+  {% include "headGame.html" %}
+  <style>
+    .blurred-card {
+      filter: blur(10px);
+      transition: filter 0.3s ease;
+    }
+    .blurred-card.show {
+      filter: blur(0);
+    }
+  </style>
+</head>
+<body class="bg-gradient-to-br from-red-300 via-red-500 to-red-700 min-h-screen flex items-center justify-center p-6">
+
+  <div class="bg-white/90 backdrop-blur-md shadow-xl rounded-3xl p-8 max-w-2xl w-full space-y-6 text-center">
+
+    <h1 class="text-4xl font-extrabold text-gray-800">Gioco dell'Impostore</h1>
+    <p class="text-gray-700 text-lg leading-relaxed">
+      A tutti i giocatori viene assegnata la stessa parola, tranne uno che riceve la parola <b>"Impostore"</b>.
+      <br>Se l'impostore vince, bevono tutti gli altri, altrimenti beve lui.
+    </p>
+
+    <div id="card" class="space-y-4">
+      <div id="card-container" class="relative blurred-card">
+        <h2 class="text-3xl font-semibold text-gray-800" id="assigned-word">{{ word if not isSelected else "Impostore!" }}</h2>
+      </div>
+      <button id="unblur-button" onclick="unblur()" class="mt-4 bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-full transition-all text-lg">
+        Mostra la parola
+      </button>
+    </div>
+
+    {% if isHost %}
+    <button id="next" class="mt-6 bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-3 px-8 rounded-full transition-all text-lg">
+      🎲 Carica una nuova carta
+    </button>
+    {% endif %}
+
+  </div>
+
+  <script>
+
+    function unblur() {
+      $("#card-container").addClass("show");
+      $("#unblur-button").hide();
+    }
+
+    init();
+  </script>
+
+  {% include "baseGame.html" %}
+
+</body>
+</html>

@@ -14,6 +14,7 @@ class Lobby:
         self.SEED = os.urandom(10)
         self.STARTED = False
         self.HOST = None
+        self.TMP = None
 
     def isStarted(self):
         return self.STARTED
@@ -43,6 +44,15 @@ class Lobby:
 
     def setHost(self, name):
         self.HOST = name
+
+    def setTmpValue(self, value):
+        self.TMP = value
+
+    def getTmpValue(self):
+        return self.TMP
+    
+    def resetTmpValue(self):
+        self.TMP = None
 
     def choicePlayers(self, n):
         players = list(self.PLAYERS.keys())

@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="it">
+
+<head>
+    {% include "headGame.html" %}
+</head>
+
+<body class="bg-gradient-to-br from-sky-500 to-violet-600 min-h-screen flex items-center justify-center p-6">
+
+  <div class="bg-white/90 backdrop-blur-md shadow-xl rounded-3xl p-8 max-w-2xl w-full space-y-6 text-center">
+
+    <h1 class="text-4xl font-extrabold text-gray-800">2 Verità e 1 Bugia</h1>
+
+    <p class="text-gray-700 text-lg leading-relaxed">
+      {{ players[0] }} deve dire 3 affermazioni su di sé: due vere e una falsa.
+      <br><br>
+      Gli altri devono indovinare quale sia la bugia. 😈
+      <br><br>
+      Chi sbaglia... beve!
+    </p>
+
+    {% if isHost %}
+    <button id="next" class="mt-4 bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-3 px-8 rounded-full transition-all text-lg">
+      🎲 Pesca un altro gioco
+    </button>
+    {% endif %}
+  </div>
+
+  {% include "baseGame.html" %}
+</body>
+</html>

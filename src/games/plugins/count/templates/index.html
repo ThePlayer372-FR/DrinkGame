@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="it">
+ 
+<head>
+    {% include "headGame.html" %}
+</head>
+
+<body class="bg-gradient-to-br from-purple-500 via-indigo-500 to-purple-700 min-h-screen flex items-center justify-center p-6">
+  <div class="bg-white/90 backdrop-blur-md shadow-xl rounded-3xl p-8 max-w-2xl w-full space-y-6 text-center">
+    <h1 class="text-4xl font-extrabold text-gray-800">🔢 Conta o Bevi</h1>
+    <p class="text-gray-700 text-lg leading-relaxed">
+      A turno, ogni giocatore iniziando da {{ players[0] }}, partendo da 1, deve dire il numero successivo.
+      <br><br>
+      ⚠️ Se il numero è multiplo di <span class="font-bold">3</span> o <span class="font-bold">5</span>, invece del numero devi dire <span class="italic font-semibold">"Drink!"</span>.
+      <br><br>
+      ❌ Se sbagli, bevi!
+    </p>
+    {% if isHost %}
+    <button id="next" class="mt-4 bg-purple-600 hover:bg-purple-700 text-white font-bold py-3 px-8 rounded-full transition-all text-lg">
+      🎲 Pesca un altro gioco
+    </button>
+    {% endif %}
+  </div>
+  {% include "baseGame.html" %}
+</body>
+</html>

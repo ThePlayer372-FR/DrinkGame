@@ -44,6 +44,7 @@ def nextGame():
         return {"ok": False, "error": "Non sei l'host!"}
 
     lobby.genNewSeed()
+    lobby.resetTmpValue()
 
     return jsonify({"ok": True})
 

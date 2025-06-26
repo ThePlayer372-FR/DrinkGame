@@ -37,8 +37,9 @@ def game():
 
     players = lobby.choicePlayers(playerCount)
     gameOpt = randomGame.play(lobby)
+    isSelected = session["playerName"] in players
 
-    return render_template_string(gameOpt["template"], players = players, lobbyCode = lobbyCode, SOCKET_URL = WEB_SOCKET_URL, **gameOpt["options"], isHost = (lobby.getHost() == session["playerName"]))
+    return render_template_string(gameOpt["template"], players = players, lobbyCode = lobbyCode, SOCKET_URL = WEB_SOCKET_URL, **gameOpt["options"], isHost = (lobby.getHost() == session["playerName"]), isSelected = isSelected)
 
 import socket_handlers
 
