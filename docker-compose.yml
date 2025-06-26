@@ -1,0 +1,11 @@
+services:
+  drinkgame:
+    build: .
+    ports:
+      - "8082:1337"
+    restart: unless-stopped
+    environment:
+      - DEBUG=1
+      - WEB_SOCKET_URL=http://127.0.0.1:8082/
+      - CODE_LEN=5
+      - INACTIVE_LOBBY_TIME=3600
