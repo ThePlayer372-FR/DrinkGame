@@ -1,14 +1,42 @@
-from manager import games_manager as gm
-from games.GamesManager import Game
+"""I Know game plugin."""
+import os
+from typing import Dict, Any
 
-class iKnow(Game):
+from manager import games_manager
+from games.GamesManager import Game
+from lobby.lobby import Lobby
+
+
+class IKnowGame(Game):
+    """I Know trivia-style game."""
+    
     name = "iKnow"
     weight = 0.1
     playerCount = 1
 
-    def play(self, lobby):
-        with open(r"games/plugins/iKnow/templates/index.html", "rb") as f:
-            content = f.read().decode("utf-8")
-        return {"template": content, "options": {}}
+    def play(self, lobby: Lobby) -> Dict[str, Any]:
+        """Start the I Know game.
+        
+        Args:
+            lobby: The game lobby
+            
+        Returns:
+            Dictionary with template and options
+        """
+        template_path = os.path.join(
+            os.path.dirname(__file__),
+            "templates",
+            "index.html"
+        )
+        
+        with open(template_path, "r", encoding="utf-8") as f:
+            template = f.read()
+        
+        return {
+            "template": template,
+            "options": {}
+        }
 
-gm.registerGame(iKnow())
+
+# Register the game
+games_manager.register_game(IKnowGame())
