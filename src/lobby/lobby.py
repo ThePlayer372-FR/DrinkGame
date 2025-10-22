@@ -121,6 +121,7 @@ class Lobby:
         weights = [1.0 / (self._players[player] + 1) for player in players]
         player_weights = list(zip(players, weights))
         selected_players: List[str] = []
+        random.seed(self.get_seed())
         
         for _ in range(n):
             total_weight = sum(w for _, w in player_weights)

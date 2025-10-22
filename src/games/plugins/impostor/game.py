@@ -1,6 +1,7 @@
 """Impostor game plugin."""
 import os
-from typing import Dict, Any, Optional
+import threading
+from typing import Dict, Any
 
 import requests
 
@@ -16,6 +17,10 @@ class ImpostorGame(Game):
     name = "impostor"
     weight = 0.1
     playerCount = 1
+    
+    def __init__(self) -> None:
+        """Initialize the impostor game with a lock for thread safety."""
+        self._word_generation_lock = threading.Lock()
 
     def _generate_word(self) -> str:
         """Generate a random word from an external API.
@@ -58,13 +63,15 @@ class ImpostorGame(Game):
         with open(template_path, "r", encoding="utf-8") as f:
             template = f.read()
 
-        # Check if word is already generated for this round
-        tmp_value = lobby.get_tmp_value()
-        if tmp_value is None or not isinstance(tmp_value, dict) or tmp_value.get("Type") != "impostor":
-            word = self._generate_word()
-            lobby.set_tmp_value({"Word": word, "Type": "impostor"})
-        else:
-            word = tmp_value["Word"]
+        # Use lock to prevent race condition when generating word
+        with self._word_generation_lock:
+            # Check if word is already generated for this round
+            tmp_value = lobby.get_tmp_value()
+            if tmp_value is None or not isinstance(tmp_value, dict) or tmp_value.get("Type") != "impostor":
+                word = self._generate_word()
+                lobby.set_tmp_value({"Word": word, "Type": "impostor"})
+            else:
+                word = tmp_value["Word"]
 
         return {
             "template": template,
